@@ -1,0 +1,13 @@
+services:
+  hydra-server:
+    env_file: .env
+    image: hydra-server:latest
+    restart: unless-stopped
+
+  hydra-client:
+    image: hydra-client:latest
+    env_file: .env
+    container_name: hydra-client
+    restart: unless-stopped
+    ports: [ "32000:80" ]
+    depends_on: [ hydra-server ]
