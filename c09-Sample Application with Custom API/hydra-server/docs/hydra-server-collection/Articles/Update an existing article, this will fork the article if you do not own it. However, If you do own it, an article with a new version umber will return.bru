@@ -1,0 +1,11 @@
+meta {
+  name: Update an existing article, this will fork the article if you do not own it. However, If you do own it, an article with a new version umber will return
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/articles/:articleId/:articleVersion
+  body: json
+  auth: inherit
+}

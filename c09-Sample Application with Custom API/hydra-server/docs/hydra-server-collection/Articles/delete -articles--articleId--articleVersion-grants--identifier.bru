@@ -1,0 +1,11 @@
+meta {
+  name: delete /articles/:articleId/:articleVersion/grants/:identifier
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/articles/:articleId/:articleVersion/grants/:identifier
+  body: none
+  auth: inherit
+}

@@ -1,0 +1,11 @@
+meta {
+  name: Get an article specified by ID and Version
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/articles/:articleId/:articleVersion
+  body: none
+  auth: inherit
+}

@@ -1,0 +1,18 @@
+meta {
+  name: Adds a grant
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/articles/:articleId/:articleVersion/grants
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "identifier": "",
+    "permissions": []
+  }
+}
