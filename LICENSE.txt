@@ -2,6 +2,20 @@
 
 Copyright (c) 2019 Yvonne Wilson, Abhishek Hingnikar
 
+This is a custom license called the zFreeware License.
+
+It allows free personal use, copying, and modification,
+
+You are allowed to use, copy, and modify the software for personal use,
+
+including working through examples in your open-sourced GitHub account, as long as you:
+
+1. Do not use it for commercial purposes or educational materials (such as books or blog articles) without prior permission.
+
+2. Include the copyright and license notice from this LICENSE.txt in your repository.
+
+This complies with the zFreeware License terms:
+
 Permission is hereby granted, free of charge, to anyone obtaining a copy 
 of this software and associated documentation files (the "Software"), 
 to work with the Software within the limits of freeware distribution and fair use. 
@@ -23,5 +37,3 @@ AUTHORS OR COPYRIGHT HOLDERS OR APRESS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-
