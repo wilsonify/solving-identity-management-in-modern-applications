@@ -12,3 +12,14 @@ services:
     restart: unless-stopped
     ports: [ "32000:80" ]
     depends_on: [ hydra-server ]
+
+  dex:
+    user: 1000:1000
+    restart: unless-stopped
+    image: dexidp/dex:latest
+    ports:
+      - "5556:5556"
+      - "5557:5557"
+    volumes:
+      - "./etc/dex/config.docker.yaml:/etc/dex/config.docker.yaml"
+    network_mode: host

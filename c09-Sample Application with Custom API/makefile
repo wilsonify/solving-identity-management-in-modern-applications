@@ -16,3 +16,8 @@ env.tmp:
 promote:
 	mv .env.tmp .env
 
+dex/config.docker.enc.yaml:
+	sops encrypt --age age1mg4zlx7p736nnrp7glt7gyd96s33kmy8wlck903m0srkkndeaawqrqfzek --encrypted-regex "PASSW|MAIL|KEY|TOKEN|SECRET|hash" ./etc/dex/config.docker.yaml > ./etc/dex/config.docker.enc.yaml
+
+dex/config.docker.tmp.yaml:
+	sops decrypt ./etc/dex/config.docker.enc.yaml > ./etc/dex/config.docker.tmp.yaml
