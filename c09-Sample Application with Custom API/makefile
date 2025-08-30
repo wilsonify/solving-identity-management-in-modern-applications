@@ -1,3 +1,12 @@
+
+all: client server
+
+server:
+	docker build -t hydra-server:latest ./hydra-server
+
+client:
+	docker build -t hydra-client:latest ./hydra-client
+
 env.enc:
 	sops encrypt --age age1mg4zlx7p736nnrp7glt7gyd96s33kmy8wlck903m0srkkndeaawqrqfzek --encrypted-regex "PASSW|MAIL|KEY|TOKEN|SECRET" --input-type dotenv .env > .env.enc
 
@@ -6,3 +15,4 @@ env.tmp:
 
 promote:
 	mv .env.tmp .env
+
