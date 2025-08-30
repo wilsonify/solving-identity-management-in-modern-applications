@@ -1,0 +1,48 @@
+{
+	"realm": "master",
+	"enabled": true,
+	"clients": [
+		{
+			"clientId": "dex",
+			"protocol": "openid-connect",
+			"publicClient": false,
+			"secret": "dex-secret",
+			"redirectUris": [
+				"http://dex:5556/callback",
+				"http://localhost:5556/callback"
+			]
+		}
+	],
+	"users": [
+		{
+			"username": "johndoe",
+			"enabled": true,
+			"emailVerified": "ENC[AES256_GCM,data:w5zqcA==,iv:m4Y3TLM1fFFlBaqJBexT+fo5QBqs38x33mEIPb+V1hs=,tag:AzbfCqaLWkkKgBSIm5DKvQ==,type:bool]",
+			"email": "ENC[AES256_GCM,data:g4h27Xnxn1b411+SWbHlyd+P0Q==,iv:XU91FTvMKejUIHlREFbP3ujl8rtH0gnT9aqbNal2Xsw=,tag:+FJDYnHqwvM3o2jO/cfeGg==,type:str]",
+			"credentials": [
+				{
+					"type": "password",
+					"value": "ENC[AES256_GCM,data:fAsM3jHWqEYZ6izs558iZUwsJZQ=,iv:tXzcjwQkhxXOGl5jeTrrLaRe3sTZCDVi1uDtoi+jVng=,tag:BP6CNMNHRocp0dtM+ytLyA==,type:str]",
+					"temporary": false
+				}
+			]
+		}
+	],
+	"sops": {
+		"kms": null,
+		"gcp_kms": null,
+		"azure_kv": null,
+		"hc_vault": null,
+		"age": [
+			{
+				"recipient": "age1mg4zlx7p736nnrp7glt7gyd96s33kmy8wlck903m0srkkndeaawqrqfzek",
+				"enc": "-----BEGIN AGE ENCRYPTED FILE-----\nYWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBNYWVIN3g3eHBRUTJTYkN3\nTTl2cU02bm4ydnlBbkwyWERzQ2lwbjl1Zm1FCmZzZXN0bkViMWY3bDZVNFhFNkpK\nY0lzTUMrejBoUzVxVHMrMlNiOG1BTUUKLS0tIGQxa2h6QXo0YkFPZldwa09MRmNx\nekNUMGgxbytXWm5FK0kxbXFPckpFQmMKAFiyCTpCb0zFLSxx2+f8tHZHhtWaPMIT\nrYUlxpGBpsscE2oEyTxJoiYwCMzuUf6u0LMZpPqCNgutWh4pv9xq4w==\n-----END AGE ENCRYPTED FILE-----\n"
+			}
+		],
+		"lastmodified": "2025-08-30T20:36:55Z",
+		"mac": "ENC[AES256_GCM,data:lWlIBZJ1FJfKykZf6MXdlFY9JJoyrs9qyIlO5Eu1x/pLh1eCnLi2O3SXU1yK0aRpUYoBw9RNWMBSSy75ZOteL2FQ7d4O0783TeOqXKnXmRJxGMW/d5MbPHynJ7y1JQhMcwafBZrxoUjubiFsc++fsqBdWY1qN+Z00ExnxZK/7Nw=,iv:8/4NQ/LQzVmVAELjFZEIY0gJvRbE/1eGFGHoQb05fmU=,tag:IAcloj+YiX1aqfTz7qE50Q==,type:str]",
+		"pgp": null,
+		"encrypted_regex": "PASSW|MAIL|KEY|TOKEN|SECRET|hash|email|value",
+		"version": "3.9.3"
+	}
+}
