@@ -1,0 +1,53 @@
+issuer: http://127.0.0.1:5556/dex
+web:
+    http: 0.0.0.0:5556
+telemetry:
+    http: 0.0.0.0:5558
+storage:
+    type: sqlite3
+enablePasswordDB: true
+staticPasswords:
+    - email: johndoe@example.com
+      hash: ENC[AES256_GCM,data:gy3Ysh5irMdPeNAJL+c4IKpD/IdFkhkW74ytk8pAPLiHdRJQMDyCt1oKD3U9oVq/sF7EdAbxnLZxd4fA,iv:YEVSE3dYTnHNDrj8f3+vIm4BK8WLsE/SADVSuMg1xjc=,tag:WQ8B9zvd4zsql8EPzrvdaQ==,type:str]
+      username: johndoe
+      userID: 08a8684b-db88-4b73-90a9-3cd1661f5466
+staticClients:
+    - id: example-app
+      redirectURIs:
+        - http://localhost:3000/callback
+        - https://openidconnect.net/callback
+        - http://localhost:5555/callback
+        - http://localhost:32000/callback
+      name: Hydra
+      secret: ZXhhbXBsZS1hcHAtc2VjcmV0
+      oauth2:
+        skipApprovalScreen: true
+        alwaysShowLoginScreen: false
+        grantTypes:
+            - authorization_code
+            - refresh_token
+            - client_credentials
+        responseTypes:
+            - code
+            - token
+            - id_token
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1mg4zlx7p736nnrp7glt7gyd96s33kmy8wlck903m0srkkndeaawqrqfzek
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBTR0dEMVdQcVhDRG1yNzR1
+            bzJEbHk4ZVNvNk1nZUoxbmFRYm5BN0pFM1hrCmlsTjNvdURvdk0zU3Mxcm42azVi
+            N2RrL2FWMkg0bkw0a1c5ajk1THByREkKLS0tIGIrVDcrTDV3ekxvV1ZDcEc5RTgr
+            bjlrMjNGcXFCS1VEQ0k5MGNzWExTbm8K/jJhdIyq1eQBRblQnYM+uvePuejb/Trd
+            TyvGJsOuKa5eZMbavS6lqeLLHIYmNPUub7Knlyn10GD/S6tclnOitw==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-08-30T13:44:27Z"
+    mac: ENC[AES256_GCM,data:PCa2iqMjc+Ql/JBDb7has4/f9ZX06Ubsj4TWRWLNoA24oJI6W0/S6MgXC/ywqOqIE2FxjfoYkcitO9TmWmnPW2a4ObPPs+ekHRVZRzfnvPVEMxQ7YVKCzW3rTtlSVz5eupRN+EbfbnJVijS2cHZqeTTs4PdrvLfhQDJijKihbfw=,iv:vyStQEFeGdBJOJWNUcKMuUJHjZiVux26+lMa9L7lVcc=,tag:AHo+watvupKCqKancWIZLg==,type:str]
+    pgp: []
+    encrypted_regex: PASSW|MAIL|KEY|TOKEN|SECRET|hash
+    version: 3.9.3
