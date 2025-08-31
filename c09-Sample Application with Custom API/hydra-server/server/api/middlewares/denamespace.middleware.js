@@ -1,6 +1,6 @@
 import env from "../../common/env";
 
-const namespace = env('TOKEN_NAMESPACE');
+const namespace = env('TOKEN_NAMESPACE','');
 
 export default function denamespace(req, _res, next) {
     if (req.user) {

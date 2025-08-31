@@ -353,13 +353,13 @@ components:
   securitySchemes:
     OpenID:
       type: openIdConnect
-      openIdConnectUrl: 'https://yourdomain.auth0.com/.well-known/openid-configuration'
+      openIdConnectUrl: 'http://127.0.0.1:5556/dex/.well-known/openid-configuration'
     OAuth2: 
       type: oauth2
       flows: 
         authorizationCode:
-          authorizationUrl: 'https://yourdomain.auth0.com/authorize'
-          tokenUrl: 'https://yourdomain.auth0.com/oauth/token'
+          authorizationUrl: 'http://127.0.0.1:5556/dex/auth'
+          tokenUrl: 'http://127.0.0.1:5556/dex/token'
           scopes: 
             'get:article': Allows you to fetch articles
             'patch:article':  Allows you to update or post an article

@@ -5,54 +5,46 @@ import * as http from 'http';
 import * as os from 'os';
 import cookieParser from 'cookie-parser';
 
-// import oas from './oas';
-
 import l from './logger';
 import env from './env';
 import corsMiddleware from '../api/middlewares/cors.middleware';
 import errorHandler from '../api/middlewares/error.handler';
 
-const app = new Express();
-// const exit = process.exit;
-
 export default class Server {
   constructor() {
+    this.app = Express();
     const root = path.normalize(`${__dirname}/../..`);
-    app.set('appPath', `${root}/client`);
-    app.use(bodyParser.json({ limit: env('REQUEST_LIMIT', '100kb') }));
-    app.use(
-      bodyParser.urlencoded({
-        extended: true,
-        limit: env('REQUEST_LIMIT', '100kb'),
-      })
-    );
-    app.use(bodyParser.text({ limit: env('REQUEST_LIMIT', '100kb') }));
-    app.use(cookieParser(env('SESSION_SECRET')));
-    app.use(Express.static(`${root}/public`));
+    this.app.set('appPath', `${root}/client`);
+    this.app.use(bodyParser.json({ limit: env('REQUEST_LIMIT', '100kb') }));
+    this.app.use(bodyParser.urlencoded({ extended: true, limit: env('REQUEST_LIMIT', '100kb') }));
+    this.app.use(bodyParser.text({ limit: env('REQUEST_LIMIT', '100kb') }));
+    this.app.use(cookieParser(env('SESSION_SECRET')));
+    this.app.use(Express.static(`${root}/public`));
+    this.routes = null;
+    this.server = null; // hold HTTP server instance if started
   }
 
   router(routes) {
     this.routes = routes;
-    return this;
+    return this; // keep chainable API
   }
 
-  async listen(port = env('PORT')) {
-    const welcome = p => () =>
-      l.info(
-        `up and running in ${env('NODE_ENV',
-          'development')} @: ${os.hostname()} on port: ${p}}`
-      );
-      
-    try {
-      app.use(corsMiddleware);
-      // await oas(app, this.routes)
-      this.routes(app);
-      http.createServer(app).listen(port, welcome(port));
-      app.use(errorHandler);
-    } catch (e) {
-      l.error('Error starting the server', e);
+  listen(port = env('PORT', '3001'), startServer = true) {
+    if (!this.routes) {
+      throw new Error('No routes provided');
     }
-    
-    return app;
+
+    // Apply middleware and routes
+    this.app.use(corsMiddleware);
+    this.routes(this.app);
+    this.app.use(errorHandler);
+
+    if (startServer) {
+      this.server = http.createServer(this.app).listen(port, () => {
+        l.info(`up and running in ${env('NODE_ENV', 'development')} @: ${os.hostname()} on port: ${port}`);
+      });
+    }
+
+    return this.app; // return Express app for tests
   }
 }

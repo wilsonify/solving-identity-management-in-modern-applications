@@ -3,6 +3,13 @@
 
 # ---- Base image ----
 FROM node:20-alpine AS base
+ENV APP_ID=hydra-server
+ENV NODE_ENV=test
+ENV OIDC_ISSUER=http://127.0.0.1:5556/dex
+ENV OIDC_CLIENT_ID=example-app
+ENV OIDC_REDIRECT_URI=http://localhost:32000/callback
+ENV OIDC_AUDIENCE=http://hydra-server.localhost
+
 WORKDIR /usr/src/app
 COPY package*.json ./
 
@@ -11,6 +18,7 @@ FROM base AS build
 RUN npm install
 COPY . .
 RUN npm run compile
+RUN npm test
 
 # ---- Production runtime ----
 FROM node:20-alpine AS prod

@@ -7,8 +7,11 @@ import env from './env';
 
 export default function oas(app, routes) {
   const apiSpec = path.join(__dirname, 'api.yml');
-  const validateResponses =env('OPENAPI_ENABLE_RESPONSE_VALIDATION').toUpperCase() === 'true';
-  const openApiSpec = env('OPENAPI_SPEC', '/spec');
+  const validateResponses = (() => {
+    const raw = env('OPENAPI_ENABLE_RESPONSE_VALIDATION', 'false');
+    return ['true', '1', 'yes', 'on'].includes(String(raw).toLowerCase());
+  })();
+  const openApiSpec = env('OPENAPI_SPEC', '/api/v1/spec');
   
   return new OpenApiValidator({
     apiSpec,
@@ -16,7 +19,7 @@ export default function oas(app, routes) {
   })
     .install(app)
     .then(() => {
-      // app.use(openApiSpec, Express.static(apiSpec));
+      app.use(openApiSpec, Express.static(apiSpec));
       routes(app);
       app.use(errorHandler);
     });

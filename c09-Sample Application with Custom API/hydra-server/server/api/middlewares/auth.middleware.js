@@ -1,40 +1,39 @@
 import ExpressJWT from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
-import env from '../../common/env';
+import { oidcIssuer, apiUrl } from '../../common/env';
 
+/**
+ * Configure the JWKS client for OIDC
+ * Dex exposes a JWKS endpoint at <issuer>/keys
+ */
 const secret = jwksRsa.expressJwtSecret({
   cache: true,
   rateLimit: true,
   jwksRequestsPerMinute: 5,
-  jwksUri: `https://${env('AUTH0_DOMAIN')}/.well-known/jwks.json`,
+  jwksUri: `${oidcIssuer}/keys`,
 });
 
 const config = {
-  // Dynamically provide a signing key
-  // based on the kid in the header and
-  // the signing keys provided by the JWKS endpoint.
-
+  // Dynamically provide a signing key based on the kid in the JWT header
   secret,
 
-  // Validate the audience and the issuer.
-  audience: env('API_IDENTIFIER'),
-  issuer: `https://${env('AUTH0_DOMAIN')}/`,
-
-  // Enforce the Signing Algorithm used by Auth0
-  algorithms: ['RS256'],
+  // Validate the audience and issuer
+  audience: apiUrl,         // your API identifier
+  issuer: oidcIssuer,       // OIDC issuer
+  algorithms: ['RS256'],    // enforce RS256
 };
 
 /**
- * Setup our middleware in order to consume Auth0 issued Access Tokens
- *
- *
- * This code was originally found at For the latest version of this,
- * please refer to
- *
- * https://auth0.com/docs/quickstart/backend/nodejs/01-authorization#validate-access-tokens
+ * Middleware to allow optional authentication
+ * Credentials not required; unauthenticated users can access
  */
 export const allowAnonymous = ExpressJWT({
   ...config,
   credentialsRequired: false,
 });
+
+/**
+ * Middleware to enforce authentication
+ * Rejects requests without valid access tokens
+ */
 export const ensureUser = ExpressJWT({ ...config });
