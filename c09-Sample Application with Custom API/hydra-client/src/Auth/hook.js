@@ -1,101 +1,91 @@
+// src/Auth/hook.js
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Auth0Wrapper } from "./Auth0Wrapper";
-import createAuth0Client from "@auth0/auth0-spa-js";
-import { useErrors } from "../Error/hook";
 import { Spinner } from "reactstrap";
+import { useErrors } from "../Error/hook";
+import { UserManager, WebStorageStateStore } from "oidc-client-ts";
 
-// Used on Crodova
-// 
-import Auth0Cordova from '@auth0/cordova';
-import { Auth0CordovaWrapper } from "./Auth0CordovaWrapper";
-import { PromisingSecureStorage } from "./PromisingSecureStorage";
-
-const Auth0Context = createContext();
+const OIDCContext = createContext();
 
 /**
- * AuthContext creates a Context for All Auth Operations.
- * @param {any} config
+ * AuthProvider sets up a generic OIDC client (Dex, Keycloak, Auth0, etc.)
  */
 export function AuthProvider({ config, children }) {
-  const [auth, updateAuth] = useState(null);
+  const [auth, setAuth] = useState(null);
+
   useEffect(() => {
-    (async () => {
-      if (!window.cordova) {
-        const auth0SpaClient = await createAuth0Client(config);
-        updateAuth(new Auth0Wrapper(auth0SpaClient));  
-      } else {
-        document.addEventListener('deviceready', async () => {
-          window.handleOpenURL = Auth0Cordova.onRedirectUri
-          const auth0Cordova = new Auth0Cordova({
-            domain: config.domain,
-            clientId: config.clientIdCordovaApp,
-            packageIdentifier: 'com.apress.mi.app'
-          });
-          const store = await PromisingSecureStorage.create();
-          updateAuth(new Auth0CordovaWrapper(auth0Cordova, store));
-        });
-      }
-    })();
+    const init = async () => {
+      const userManager = new UserManager({
+        authority: config.issuer, // e.g. http://127.0.0.1:5556/dex
+        client_id: config.clientId,
+        redirect_uri: config.redirectUri,
+        post_logout_redirect_uri: config.postLogoutRedirectUri || window.location.origin,
+        response_type: "code",
+        scope: config.scope || "openid profile email",
+        audience: config.audience,
+        userStore: new WebStorageStateStore({ store: window.localStorage }),
+      });
+
+      // Try to restore an existing user session
+      const user = await userManager.getUser();
+      setAuth({ userManager, user });
+    };
+
+    init();
   }, [config]);
 
   if (!auth) {
-    return <Spinner />
+    return <Spinner />;
   }
 
   return (
-    <Auth0Context.Provider value={auth}>
+    <OIDCContext.Provider value={auth}>
       {children}
-    </Auth0Context.Provider>
+    </OIDCContext.Provider>
   );
 }
 
-/**
- * @returns {Auth0Wrapper}
- */
 export function useAuth() {
-  return useContext(Auth0Context);
+  return useContext(OIDCContext);
 }
 
 /**
- * Helper method for getting user in React
+ * Get an access token (refresh if needed)
  */
-export function useToken(audience, scope) {
-  const auth = useAuth();
-  const [token, updateToken] = useState(null);
+export function useToken() {
+  const { userManager, user } = useAuth();
+  const [token, setToken] = useState(user?.access_token);
 
   useEffect(() => {
     (async () => {
-      const token = await auth.getToken(audience, scope);
-      updateToken(token);
+      if (!user || user.expired) {
+        const newUser = await userManager.signinSilent().catch(() => null);
+        if (newUser) {
+          setToken(newUser.access_token);
+        }
+      } else {
+        setToken(user.access_token);
+      }
     })();
-  }, [auth, audience, scope]);
+  }, [user, userManager]);
 
   return [!token, token];
 }
 
 /**
- * Helper method for getting user in React
+ * Get user profile info
  */
-export function useUser(audience, scope) {
-
-  const auth = useAuth();
-  const [user, updateUser] = useState(null);
-  const [isUserLoading, updateUserLoading] = useState(true);
+export function useUser() {
+  const { user } = useAuth();
+  const [profile, setProfile] = useState(user?.profile);
   const [, publishError] = useErrors();
 
   useEffect(() => {
-    (async () => {
-      updateUserLoading(true);
-      try {
-        const user = await auth.getUserProfile(audience, scope);
-        updateUser(user);
-      } catch (e) {
-        publishError(e);
-      } finally {
-        updateUserLoading(false);
-      }
-    })();
-  }, [auth, audience, scope, publishError]);
+    try {
+      setProfile(user?.profile || null);
+    } catch (e) {
+      publishError(e);
+    }
+  }, [user, publishError]);
 
-  return [isUserLoading, user];
+  return [!profile, profile];
 }
