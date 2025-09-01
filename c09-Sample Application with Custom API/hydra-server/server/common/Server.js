@@ -29,7 +29,7 @@ export default class Server {
     return this; // keep chainable API
   }
 
-  listen(port = env('PORT', '3001'), startServer = true) {
+  listen(port = env('PORT', '3000'), startServer = true) {
     if (!this.routes) {
       throw new Error('No routes provided');
     }

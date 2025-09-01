@@ -3,6 +3,8 @@ import userRouter from './api/controllers/user/router';
 import path from 'path';
 import express from 'express';
 import fs from 'fs';
+import fetch from 'node-fetch';
+import env from './common/env';
 
 export default function routes(app) {
   // --- Health / readiness / liveness probes ---
@@ -16,20 +18,31 @@ export default function routes(app) {
     res.json({ status: 'alive', pid: process.pid });
   });
 
-  // Readiness probe (is the app ready to serve traffic?)
-  // Here you can add checks like DB connection, cache, etc.
-  app.get('/readiness', async (req, res) => {
-    try {
-      // placeholder: pretend dependencies are OK
-      // TODO: add actual checks (e.g. DB ping, external service health)
-      res.json({ status: 'ready' });
-    } catch (err) {
-      res.status(500).json({
-        status: 'not ready',
-        error: err.message,
-      });
+
+
+// Readiness probe
+app.get('/readiness', async (req, res) => {
+  try {
+    // Check IDP service (Dex/Keycloak) is responding
+    const idpUrl = env(OIDC_ISSUER,'http://dex:5556')
+    const response = await fetch(idpUrl, { method: 'GET', timeout: 2000 });
+
+    if (!response.ok) {
+      throw new Error(`IDP service returned status ${response.status}`);
     }
-  });
+
+    // All checks passed
+    res.json({ status: 'ready', dependencies: { idp: 'ok' } });
+  } catch (err) {
+    console.error(`[READINESS] Dependency check failed: ${err.message}`);
+    res.status(500).json({
+      status: 'not ready',
+      dependencies: { idp: 'down' },
+      error: err.message,
+    });
+  }
+});
+
 
   // --- API routes ---
   app.use('/api/v1/articles', articlesRouter);

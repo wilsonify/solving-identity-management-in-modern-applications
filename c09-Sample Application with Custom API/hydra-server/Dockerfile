@@ -36,5 +36,8 @@ COPY --from=build /usr/src/app/server/common/openapi.yml ./server/common/openapi
 # Expose your app’s port (change if your app uses something else)
 EXPOSE 3000
 
+# Use /readiness endpoint
+HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=3 CMD wget -O - http://localhost:3000/health || exit 1
+
 # Start in production mode
 CMD ["npm", "start"]
