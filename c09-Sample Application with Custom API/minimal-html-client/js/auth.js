@@ -1,6 +1,15 @@
-import { oidcConfig } from './config.js';
+
 import { generatePKCE } from './pkce.js';
 
+export const ENV = {
+  OIDC_ISSUER: "http://dex:5556/dex",
+  OIDC_CLIENT_ID: "markdown-editor-client",
+  OIDC_REDIRECT_URI: window.location.origin + window.location.pathname,
+  OIDC_SCOPE: "openid profile email",
+  API_URL: "http://localhost:3001"  // optional if you call your API
+};
+
+console.debug('ENV is:', ENV);
 export async function login() {
   console.debug('[login] Starting login flow');
 
@@ -8,11 +17,11 @@ export async function login() {
     const codeChallenge = await generatePKCE();
     console.debug('[login] Generated code challenge:', codeChallenge);
 
-    const url = new URL(`${oidcConfig.authority}/authorize`);
-    url.searchParams.set('client_id', oidcConfig.clientId);
-    url.searchParams.set('redirect_uri', oidcConfig.redirectUri);
-    url.searchParams.set('response_type', oidcConfig.responseType);
-    url.searchParams.set('scope', oidcConfig.scope);
+    const url = new URL(`${ENV.OIDC_ISSUER}/authorize`);
+    url.searchParams.set('client_id', ENV.OIDC_CLIENT_ID);
+    url.searchParams.set('redirect_uri', ENV.OIDC_REDIRECT_URI);
+    url.searchParams.set('response_type', ENV.responseType);
+    url.searchParams.set('scope', ENV.OIDC_SCOPE);
     url.searchParams.set('code_challenge', codeChallenge);
     url.searchParams.set('code_challenge_method', 'S256');
 
@@ -39,15 +48,15 @@ export async function handleCallback(loginBtn) {
     }
 
     try {
-      console.debug('[handleCallback] Exchanging code for tokens at:', `${oidcConfig.authority}/token`);
-      const tokenResponse = await fetch(`${oidcConfig.authority}/token`, {
+      console.debug('[handleCallback] Exchanging code for tokens at:', `${ENV.authority}/token`);
+      const tokenResponse = await fetch(`${ENV.authority}/token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           grant_type: 'authorization_code',
-          client_id: oidcConfig.clientId,
+          client_id: ENV.clientId,
           code: code,
-          redirect_uri: oidcConfig.redirectUri,
+          redirect_uri: ENV.redirectUri,
           code_verifier: codeVerifier
         })
       });
