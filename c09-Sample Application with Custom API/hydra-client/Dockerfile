@@ -29,6 +29,8 @@ EXPOSE 80
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
 
+HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget -q -O - http://127.0.0.1:80/manifest.json || exit 1
 
 
 
