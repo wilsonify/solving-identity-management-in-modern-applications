@@ -1,3 +1,6 @@
+// Proof Key for Code Exchange
+
+
 // Helper: Generate random string
 export function randomString(length = 43) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
