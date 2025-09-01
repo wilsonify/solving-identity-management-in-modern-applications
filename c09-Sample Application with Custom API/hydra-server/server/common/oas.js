@@ -6,7 +6,7 @@ import env from './env';
 
 
 export default function oas(app, routes) {
-  const apiSpec = path.join(__dirname, 'api.yml');
+  const apiSpec = path.join(__dirname, 'openapi.yml');
   const validateResponses = (() => {
     const raw = env('OPENAPI_ENABLE_RESPONSE_VALIDATION', 'false');
     return ['true', '1', 'yes', 'on'].includes(String(raw).toLowerCase());

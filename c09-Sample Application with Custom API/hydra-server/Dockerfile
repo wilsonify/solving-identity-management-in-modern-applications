@@ -31,7 +31,7 @@ RUN npm install --omit=dev
 # Copy built app from build stage
 COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/public ./public
-COPY --from=build /usr/src/app/server/common/api.yml ./server/common/api.yml
+COPY --from=build /usr/src/app/server/common/openapi.yml ./server/common/openapi.yml
 
 # Expose your app’s port (change if your app uses something else)
 EXPOSE 3000

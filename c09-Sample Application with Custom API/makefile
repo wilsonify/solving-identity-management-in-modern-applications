@@ -13,6 +13,12 @@ idp:
 iam:
 	docker build -t hydra-iam:latest ./iam
 
+test-runner:
+	docker build -t hydra-tests ./tests
+
+test:
+	docker run --rm --network host hydra-tests
+
 env.enc:
 	sops encrypt --age age1mg4zlx7p736nnrp7glt7gyd96s33kmy8wlck903m0srkkndeaawqrqfzek --encrypted-regex "PASSW|MAIL|KEY|TOKEN|SECRET" --input-type dotenv .env > .env.enc
 

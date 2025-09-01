@@ -5,13 +5,39 @@ import express from 'express';
 import fs from 'fs';
 
 export default function routes(app) {
-  // API routes
+  // --- Health / readiness / liveness probes ---
+  // General health check (basic signal that server is up)
+  app.get('/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  });
+
+  // Liveness probe (is the process alive? usually trivial)
+  app.get('/liveness', (req, res) => {
+    res.json({ status: 'alive', pid: process.pid });
+  });
+
+  // Readiness probe (is the app ready to serve traffic?)
+  // Here you can add checks like DB connection, cache, etc.
+  app.get('/readiness', async (req, res) => {
+    try {
+      // placeholder: pretend dependencies are OK
+      // TODO: add actual checks (e.g. DB ping, external service health)
+      res.json({ status: 'ready' });
+    } catch (err) {
+      res.status(500).json({
+        status: 'not ready',
+        error: err.message,
+      });
+    }
+  });
+
+  // --- API routes ---
   app.use('/api/v1/articles', articlesRouter);
   app.use('/api/v1/user', userRouter);
 
   // Serve the API spec with debug logs
   app.get('/api/v1/spec', (req, res) => {
-    const filePath = path.join(process.cwd(), 'server', 'common', 'api.yml');
+    const filePath = path.join(process.cwd(), 'server', 'common', 'openapi.yml');
     console.log(`[DEBUG] Request for /api/v1/spec`);
     console.log(`[DEBUG] Trying to read: ${filePath}`);
 
