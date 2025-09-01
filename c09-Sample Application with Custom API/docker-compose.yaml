@@ -54,4 +54,4 @@ services:
     image: minimal-html-client:latest
     env_file: .env
     restart: unless-stopped
-    ports: [ "32005:80" ]
+    ports: [ "8080:80" ]
