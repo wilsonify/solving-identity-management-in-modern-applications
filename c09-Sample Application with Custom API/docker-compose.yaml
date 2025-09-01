@@ -49,3 +49,9 @@ services:
       timeout: 5s
       retries: 3
       start_period: 5s
+
+  minimal-html-client:
+    image: minimal-html-client:latest
+    env_file: .env
+    restart: unless-stopped
+    ports: [ "32005:80" ]

@@ -1,0 +1,21 @@
+body {
+  padding-top: 70px;
+}
+
+.editor {
+  margin-top: 20px;
+}
+
+.grant {
+  margin-bottom: 10px;
+}
+
+.grant .badge {
+  margin-right: 5px;
+}
+
+#markdown-preview {
+  border: 1px solid #ced4da;
+  padding: 10px;
+  min-height: 200px;
+}

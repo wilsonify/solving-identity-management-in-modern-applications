@@ -7,6 +7,9 @@ server:
 client:
 	docker build -t hydra-client:latest ./hydra-client
 
+minimal-client:
+	docker build -t minimal-html-client:latest ./minimal-html-client
+
 hydra-idp:
 	docker build -t hydra-idp:latest ./idp
 
