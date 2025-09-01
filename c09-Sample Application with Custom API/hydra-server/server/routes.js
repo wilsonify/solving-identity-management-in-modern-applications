@@ -24,7 +24,7 @@ export default function routes(app) {
 app.get('/readiness', async (req, res) => {
   try {
     // Check IDP service (Dex/Keycloak) is responding
-    const idpUrl = env(OIDC_ISSUER,'http://dex:5556')
+    const idpUrl = env("OIDC_ISSUER",'http://dex:5556')
     const response = await fetch(idpUrl, { method: 'GET', timeout: 2000 });
 
     if (!response.ok) {
