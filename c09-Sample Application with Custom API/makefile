@@ -7,10 +7,10 @@ server:
 client:
 	docker build -t hydra-client:latest ./hydra-client
 
-idp:
+hydra-idp:
 	docker build -t hydra-idp:latest ./idp
 
-iam:
+hydra-iam:
 	docker build -t hydra-iam:latest ./iam
 
 test-runner:
